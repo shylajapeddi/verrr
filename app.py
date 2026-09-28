@@ -58,16 +58,57 @@ def ask_gemini(prompt):
 def generate_verilog(task):
     """Generate Verilog design and testbench."""
 
-    prompt = f"""
-You are an expert Verilog HDL engineer.
+    prompt = (
+        "You are an expert Verilog HDL engineer.\n\n"
+        "User requirement:\n"
+        + task
+        + "\n\n"
+        "Create a complete Verilog solution.\n\n"
+        "Return EXACTLY in this format:\n\n"
+        "DESIGN:\n"
+        "```verilog\n"
+        "<complete Verilog design>\n"
+        "```\n\n"
+        "TESTBENCH:\n"
+        "```verilog\n"
+        "<complete Verilog testbench>\n"
+        "```\n\n"
+        "Rules:\n"
+        "1. Use Verilog/SystemVerilog syntax supported by Icarus Verilog.\n"
+        "2. Create a complete synthesizable design.\n"
+        "3. The testbench must correctly instantiate the design.\n"
+        "4. Include useful test cases.\n"
+        "5. The testbench must use $finish.\n"
+        "6. Do not add explanations inside the code blocks."
+    )
 
-User requirement:
-{task}
+    response = ask_gemini(prompt)
 
-Create a complete Verilog solution.
+    if response.startswith("ERROR:"):
+        return "", "", response
 
-Return EXACTLY in this format:
+    design_match = re.search(
+        r"DESIGN:\s*```(?:verilog|systemverilog|sv)?\s*(.*?)```",
+        response,
+        re.DOTALL | re.IGNORECASE
+    )
 
-DESIGN:
-```verilog
-<complete Verilog design>
+    testbench_match = re.search(
+        r"TESTBENCH:\s*```(?:verilog|systemverilog|sv)?\s*(.*?)```",
+        response,
+        re.DOTALL | re.IGNORECASE
+    )
+
+    design = (
+        design_match.group(1).strip()
+        if design_match
+        else ""
+    )
+
+    testbench = (
+        testbench_match.group(1).strip()
+        if testbench_match
+        else ""
+    )
+
+    return design, testbench, response
