@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Verilog Code Generator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin-top: 8px;
+            color: #d1d5db;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #111827;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 130px;
+            padding: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        pre {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .success {
+            border-left: 5px solid #16a34a;
+        }
+
+        .result-title {
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>AI Verilog Code Generator & Tester</h1>
+        <p>Generate Verilog design, testbench and simulation report using AI</p>
+    </div>
+
+    <div class="container">
+
+        <!-- Input Section -->
+        <div class="card">
+            <h2>Enter Verilog Requirement</h2>
+
+            <form method="POST">
+
+                <textarea
+                    name="task"
+                    placeholder="Example: Design a 4-bit binary counter using Verilog..."
+                    required
+                >{{ task }}</textarea>
+
+                <br>
+
+                <button type="submit">
+                    Generate & Test
+                </button>
+
+            </form>
+        </div>
+
+
+        {% if design %}
+
+        <!-- Design Section -->
+        <div class="card">
+            <h2 class="result-title">Generated Verilog Design</h2>
+
+            <pre>{{ design }}</pre>
+        </div>
+
+
+        <!-- Testbench Section -->
+        <div class="card">
+            <h2 class="result-title">Generated Testbench</h2>
+
+            <pre>{{ testbench }}</pre>
+        </div>
+
+
+        <!-- Simulation Section -->
+        <div class="card success">
+            <h2 class="result-title">Simulation Result</h2>
+
+            <pre>{{ simulation }}</pre>
+        </div>
+
+
+        <!-- Report Section -->
+        <div class="card">
+            <h2 class="result-title">Test Report</h2>
+
+            <pre>{{ report }}</pre>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="footer">
+        AI-Assisted Verilog Coding and Testing System
+    </div>
+
+</body>
+</html>
