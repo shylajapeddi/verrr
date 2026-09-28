@@ -4,30 +4,16 @@ import subprocess
 import tempfile
 
 from flask import Flask, render_template, request
-
 from langchain_google_genai import ChatGoogleGenerativeAI
-
-
-# --------------------------------------------------
-# Flask App
-# --------------------------------------------------
 
 app = Flask(__name__)
 
-
-# --------------------------------------------------
+# -----------------------------
 # Gemini Configuration
-# --------------------------------------------------
+# -----------------------------
 
 API_KEY = os.environ.get("GEMINI_API_KEY")
-
-if not API_KEY:
-    print("WARNING: GEMINI_API_KEY is not set.")
-
-MODEL_NAME = os.environ.get(
-    "GEMINI_MODEL",
-    "gemini-2.5-flash"
-)
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 
 llm = None
 
@@ -43,15 +29,15 @@ if API_KEY:
         print("Gemini initialization error:", e)
 
 
-# --------------------------------------------------
-# Gemini Helper
-# --------------------------------------------------
+# -----------------------------
+# Gemini Function
+# -----------------------------
 
 def ask_gemini(prompt):
-    """Send a prompt to Gemini and return the response text."""
+    """Send a prompt to Gemini."""
 
     if llm is None:
-        return "ERROR: Gemini is not configured. Check GEMINI_API_KEY."
+        return "ERROR: GEMINI_API_KEY is not configured."
 
     try:
         response = llm.invoke(prompt)
@@ -62,34 +48,15 @@ def ask_gemini(prompt):
         return str(response)
 
     except Exception as e:
-        return f"ERROR while calling Gemini: {str(e)}"
+        return f"ERROR: {str(e)}"
 
 
-# --------------------------------------------------
-# Extract Code From Gemini Response
-# --------------------------------------------------
-
-def extract_verilog(text):
-    """Extract Verilog code from a Gemini response."""
-
-    match = re.search(
-        r"```(?:verilog|systemverilog|sv)?\s*(.*?)```",
-        text,
-        re.DOTALL | re.IGNORECASE
-    )
-
-    if match:
-        return match.group(1).strip()
-
-    return text.strip()
-
-
-# --------------------------------------------------
-# Generate Verilog Design
-# --------------------------------------------------
+# -----------------------------
+# Generate Verilog
+# -----------------------------
 
 def generate_verilog(task):
-    """Generate synthesizable Verilog and a testbench."""
+    """Generate Verilog design and testbench."""
 
     prompt = f"""
 You are an expert Verilog HDL engineer.
@@ -103,4 +70,4 @@ Return EXACTLY in this format:
 
 DESIGN:
 ```verilog
-<complete synthesizable Verilog code>
+<complete Verilog design>
