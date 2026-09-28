@@ -15,8 +15,7 @@ app = Flask(__name__)
 # ==========================================
 
 API_KEY = os.environ.get("GEMINI_API_KEY")
-MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
-
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 llm = None
 
 if API_KEY:
