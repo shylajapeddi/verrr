@@ -135,15 +135,22 @@
 
                 <br>
 
-                <button type="submit">
-                    Generate & Test
-                </button>
+                <button type="submit" id="generateButton">
+    Generate & Test
+</button>
 
+<script>
+    document.querySelector("form").addEventListener("submit", function () {
+        const button = document.getElementById("generateButton");
+        button.innerText = "Generating... Please wait";
+        button.disabled = true;
+    });
+</script>
             </form>
         </div>
 
 
-        {% if design %}
+       {% if design or testbench or simulation or report %}
 
         <!-- Design Section -->
         <div class="card">
