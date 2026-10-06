@@ -17,20 +17,17 @@ app = Flask(__name__)
 
 API_KEY = os.environ.get("GEMINI_API_KEY")
 MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
-llm = None
+
+client = None
 
 if API_KEY:
     try:
-        llm = ChatGoogleGenerativeAI(
-            model=MODEL_NAME,
-            google_api_key=API_KEY,
-            temperature=0.2
-        )
-
+        client = genai.Client(api_key=API_KEY)
         print("Gemini initialized successfully.")
-
     except Exception as e:
         print("Gemini initialization error:", e)
+else:
+    print("ERROR: GEMINI_API_KEY is not configured.")
 
 
 # ==========================================
@@ -39,20 +36,28 @@ if API_KEY:
 
 def ask_gemini(prompt):
 
-    if llm is None:
+    if client is None:
         return "ERROR: GEMINI_API_KEY is not configured."
 
     try:
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.2,
+                automatic_function_calling={
+                    "disable": True
+                }
+            )
+        )
 
-        response = llm.invoke(prompt)
+        if hasattr(response, "text") and response.text:
+            return response.text
 
-        if hasattr(response, "content"):
-            return response.content
-
-        return str(response)
+        return "ERROR: Gemini returned an empty response."
 
     except Exception as e:
-
+        print("Gemini API error:", str(e))
         return "ERROR: " + str(e)
 
 
