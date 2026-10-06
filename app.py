@@ -383,31 +383,32 @@ def home():
 
     task = ""
 
-
     if request.method == "POST":
 
-        task = request.form.get(
-            "task",
-            ""
-        ).strip()
+        try:
+            task = request.form.get("task", "").strip()
 
-        result = process_task(task)
+            result = process_task(task)
 
+        except Exception as e:
+
+            print("ERROR IN HOME ROUTE:", str(e))
+
+            result = {
+                "design": "",
+                "testbench": "",
+                "simulation": "",
+                "report": "ERROR: " + str(e)
+            }
 
     return render_template(
         "index.html",
-
         task=task,
-
         design=result["design"],
-
         testbench=result["testbench"],
-
         simulation=result["simulation"],
-
         report=result["report"]
     )
-
 
 # ==========================================
 # HEALTH CHECK
