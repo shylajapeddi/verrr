@@ -4,7 +4,8 @@ import subprocess
 import tempfile
 
 from flask import Flask, render_template, request
-from langchain_google_genai import ChatGoogleGenerativeAI
+from google import genai
+from google.genai import types
 
 
 app = Flask(__name__)
